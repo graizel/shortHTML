@@ -25,7 +25,7 @@
 //   |r  --   read          |ra#14#                  =         ^        (outputs 14th character of input string)
 //      or                  |ra#14,16#               =         ^br      (outputs 14th through 16th character of input string)
 //      or                  |rr#14#                  =         ^br      (outputs 14th character from current index of input string)
-//          format: |rZXYX            , X = limiting character, Y = read index, Z = find index method   , (a0 shows current level input string, r0 shows current index)
+//          format: |rZXYX            , X = limiting character, Y = read index, Z = find index method   , (a0 returns current level input string, r0 returns current index)
 //
 //   |g  --   goto          |ga#14#               sets character index to 14th of input string
 //      or                  |gr#14#               sets character index to current character + 14
