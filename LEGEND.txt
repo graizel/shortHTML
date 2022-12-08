@@ -21,7 +21,7 @@
 //              call        |v#         =          ^br          format:   |vX     , X = identity character, Y = data (calls variable named X, must already be declared)
 //   |d  --   declare       |d#^br#   stored as    ^br          format:   |fXYX   , X = identity character, Y = data (saved as variable named X, can overwrite variable data)
 //
-// Functions:
+// Functions
 //   |r  --   read          |ra#14#                  =         ^        (outputs 14th character of input string)
 //      or                  |ra#14,16#               =         ^br      (outputs 14th through 16th character of input string)
 //      or                  |rr#14#                  =         ^br      (outputs 14th character from current index of input string)
@@ -35,7 +35,7 @@
 //          format: |mXZY}            , X/Y = data            , Z = operator
 //
 //   |i  --   if            |i#|v$=1#^br#          =         <br/> (if |v$ is equal to 1)
-//          format: |fXAZBXYX         , X = limiting character, Y = data      , Z = equality type   , A/B = values
+//          format: |iXAZBXYX         , X = limiting character, Y = data      , Z = equality type   , A/B = values
 //
 //   e  --   else           |i#|v$=1#^br#e<p#      =         <br/> (if |v$ is not equal to 1),   <p> (if |v$ is not equal to 1)
-//          format: |fXAZBXYXeYX      , X = limiting character, Y = data      , Z = equality type   , A/B = values
+//          format: |iXAZBXYXeYX      , X = limiting character, Y = data      , Z = equality type   , A/B = values
