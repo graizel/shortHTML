@@ -7,6 +7,7 @@ If you would like to compile code directly from another page, submit the variabl
 Variables should be formatted to match the online compiler. 
 Variables names: 'input' (string), 'autoFill' (boolean), 'priorityTags' (array)
 
+_____________________________________________________________________________
 Please use Discord to send feedback/bug reports.
 All feedback is appreciated.
 
