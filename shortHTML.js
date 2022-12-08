@@ -22,6 +22,21 @@ let escType = ""
 let elemStr = ""
 let grpStr = ""
 
+//_________________________________________________________________
+
+// OPTIONS          format: options = [{optionName: true/false}]
+let options = [{optAutoFill: true}]
+// Priority Tags    format: tagsPri = ["tagNameA", "tagNameB", "tagNameC"]
+let tagsPri = []
+
+// INPUT
+let input = "|d#~shortHTML#|dH<sp?style='color:red'|v#>sp~H|dB?style='background-color:B|d!?style='color:blue'!|d@<sp|v!<i~@<tit~Example sHTML>_<p~This code is written in |vH>_|d#~sHTML#^br<ta?style='border: 4px solid #99ccff'<th|vB#ffcc99'~<h4~<u~&nbsp;Some of the features of |vH include:&nbsp;>_>_<tr|vB#99ccff'<td<ul<li~Shortcuts>_<li~Auto-fill>_<li~Groups>_<li~Variables>>^br<p~Press |v@ctrl>_>_~ + |v@shift>_>_~ + |v@i>_>_~ to see compilation data.>>"
+// OUTPUT
+document.getElementById('display').innerHTML = compile(input, "main")
+
+//_________________________________________________________________
+
+
 // Compile
 function compile(c_input, str_name) {
 
@@ -256,13 +271,15 @@ function translateSymb(list_id, mod_pre, mod_crt, symb_num) {
 
 function parse(id, input) {
     let varFound = false
+    
     // GROUP - VARIABLE - FUNCTION COMPILER
     for (let i = 0; i < input.length; i++) {
-        // GROUP
+        let cmdType= input[i]
+        if (grpSymb.includes(input[i])) {
             i++
             let grpChr = ""
-        if (grpSymb.includes(input[i])) {
-            // Group Compiler
+
+            // GROUP
             for (let j = 0; grpSymb[j] != input[i]; j++) {escType = j + 1}
             console.log("******************") // formatting
             console.log("group at " + i)
@@ -287,7 +304,6 @@ function parse(id, input) {
         // group END
             
         // VARIABLE
-            let cmdType= input[i]
         if (input[i - 1] === "|" && (input[i] === "v" || input[i] === "d")) {
             varFound = true
             let grpChr = input[i + 1]
@@ -589,11 +605,11 @@ function varFind(list_id, grpChr, loc) {
 //              call        |v#         =          ^br          format:   |vX     , X = identity character, Y = data (calls variable named X, must already be declared)
 //   |d  --   declare       |d#^br#   stored as    ^br          format:   |fXYX   , X = identity character, Y = data (saved as variable named X, can overwrite variable data)
 //
-// Functions:
+// Functions
 //   |r  --   read          |ra#14#                  =         ^        (outputs 14th character of input string)
 //      or                  |ra#14,16#               =         ^br      (outputs 14th through 16th character of input string)
 //      or                  |rr#14#                  =         ^br      (outputs 14th character from current index of input string)
-//          format: |rZXYX            , X = limiting character, Y = read index, Z = find index method   , (a0 returns current level input string, r0 returns current index)
+//          format: |rZXYX            , X = limiting character, Y = read index, Z = find index method   , (a0 shows current level input string, r0 shows current index)
 //
 //   |g  --   goto          |ga#14#               sets character index to 14th of input string
 //      or                  |gr#14#               sets character index to current character + 14
