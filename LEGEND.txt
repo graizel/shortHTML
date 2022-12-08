@@ -1,0 +1,41 @@
+// MASTER KEY
+//
+// Symbols:
+//   <   --   open          <p          =          <p>
+//   >   --   close         >p          =          </p>
+//   <   --   self close    ^br         =          <br/>
+//   ?   --   attribute     <p?style    =          <p style>
+//   ~   --   string        ~text       =          text
+//
+// Shortcuts:
+//   >_  --   close last    <p>_        =          <p></p>                (closes most recently opened tag)
+//   >>  --   close all     <p<i>>      =          <p><i></i></p>         (closes all open tags)
+//
+// Groups:
+//   |   --   escape        |^br        =          ^br
+//   |(  --   plaintext     |(#^br#     =          ^br          format:   |(XYX   , X = limiting character, Y = data (displays as plaintext on page)
+//   |{  --   sHTML compile |{#^br#     =          <br/>        format:   |[XYX   , X = limiting character, Y = data (compiled as sHTML, read as HTML by page)
+//   |[  --   HTML compile  |(#<br/>#   =          <br/>        format:   |(XYX   , X = limiting character, Y = data (compiled and read as HTML by page)
+//   |v  --   variable:         (declares and calls variables dynamically)
+//              declare     |v#^br#   stored as    ^br          format:   |vXYX   , X = limiting character, Y = data (saved as variable named X, data is stored, can be called)
+//              call        |v#         =          ^br          format:   |vX     , X = identity character, Y = data (calls variable named X, must already be declared)
+//   |d  --   declare       |d#^br#   stored as    ^br          format:   |fXYX   , X = identity character, Y = data (saved as variable named X, can overwrite variable data)
+//
+// Functions
+//   |r  --   read          |ra#14#                  =         ^        (outputs 14th character of input string)
+//      or                  |ra#14,16#               =         ^br      (outputs 14th through 16th character of input string)
+//      or                  |rr#14#                  =         ^br      (outputs 14th character from current index of input string)
+//          format: |rZXYX            , X = limiting character, Y = read index, Z = find index method   , (a0 shows input string, r0 shows current index)
+//
+//   |g  --   goto          |ga#14#               sets character index to 14th of input string
+//      or                  |gr#14#               sets character index to current character + 14
+//          format: |gZXYX            , X = limiting character, Y = data      , Z = find index method 
+//
+//   |m  --   math          |m1+2}                 =           3
+//          format: |mXZY}           , X/Y = data            , Z = operator
+//
+//   |i  --   if            |i#|v$=1#^br#          =         <br/> (if |v$ is equal to 1)
+//          format: |fXAZBXYX        , X = limiting character, Y = data      , Z = equality type   , A/B = values
+//
+//   e  --   else           |i#|v$=1#^br#e<p#      =         <br/> (if |v$ is not equal to 1),   <p> (if |v$ is not equal to 1)
+//          format: |fXAZBXYXeYX     , X = limiting character, Y = data      , Z = equality type   , A/B = values
