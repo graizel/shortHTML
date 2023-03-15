@@ -8,6 +8,9 @@ var grpSymb = ["[", "{", "("]
 var mathOp = ["+", "-", "*", "/", "%", "^"]
 var queryOp = ["=", "<", ">"]
 
+let options = [{optAutoFill: ""}]
+let tagsPri = []
+
 let idTotal = 0
 let elemList = []
 let modList = []
@@ -21,21 +24,6 @@ let modPre = "F"
 let escType = ""
 let elemStr = ""
 let grpStr = ""
-
-//_________________________________________________________________
-
-// OPTIONS          format: options = [{optionName: true/false}]
-let options = [{optAutoFill: true}]
-// Priority Tags    format: tagsPri = ["tagNameA", "tagNameB", "tagNameC"]
-let tagsPri = []
-
-// INPUT
-let input = "|d#~shortHTML#|dH<sp?style='color:red'|v#>sp~H|dB?style='background-color:B|d!?style='color:blue'!|d@<sp|v!<i~@<tit~Example sHTML>_<p~This code is written in |vH>_|d#~sHTML#^br<ta?style='border: 4px solid #99ccff'<th|vB#ffcc99'~<h4~<u~&nbsp;Some of the features of |vH include:&nbsp;>_>_<tr|vB#99ccff'<td<ul<li~Shortcuts>_<li~Auto-fill>_<li~Groups>_<li~Variables>>^br<p~Press |v@ctrl>_>_~ + |v@shift>_>_~ + |v@i>_>_~ to see compilation data.>>"
-// OUTPUT
-document.getElementById('display').innerHTML = compile(input, "main")
-
-//_________________________________________________________________
-
 
 // Compile
 function compile(c_input, str_name) {
@@ -470,7 +458,7 @@ function parse(id, input) {
             let numCalc = eval(numA + numOp + numB)
 
             // add read string to current string
-            input = input.slice(0, i + 1) + numCalc + input.slice(i + 1)
+            input = input.slice(0, i) + numCalc + input.slice(i)
             console.log((numCalc) + "     --result")
         }
         // math END
