@@ -44,6 +44,7 @@ console.log(c_input)
 console.log("")
 console.log("parse variables")
 
+
 c_input = parse(id, c_input) + "~"
 
 while (c_input[0] == " ") {
@@ -514,12 +515,14 @@ function parse(id, input) {
             let ifStr = grpStr
             console.log(ifStr + "     --if string")
             input = input.slice(0, i - (grpLen + 1)) + input.slice(i + 1)
-            i -= grpLen - 1
+            i -= grpLen + 1
+            console.log(input)
 
             // get else str
             let elStr = ""
             if (input[i] === "e") {
-                i--
+                console.log(grpChr)
+                i++
                 grpStr = ""
                 let grpLen = 0
                 while (input[i] != grpChr) {
@@ -527,13 +530,20 @@ function parse(id, input) {
                     grpLen++
                     i++
                 }
+                i -= 2
                 elStr = grpStr
                 console.log(elStr + "     --else string")
-                input = input.slice(0, i - (grpLen + 1)) + input.slice(i + 1)
+                console.log(elStr.length + "     --else length")
+                console.log(input)
+                input = input.slice(0, i - (grpLen - 1)) + input.slice(i + 3)
+                console.log(input)
             }
+            i -= 2
             let resultStr = (eval(queryStr)) ? ifStr : elStr
             input = input.slice(0, i) + resultStr + input.slice(i)
         }
+        //if-else statement END
+        
     }
     if (varFound) {input = parse(id, input)}
     return input
