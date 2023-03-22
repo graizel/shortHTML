@@ -30,7 +30,7 @@ let grpStr = ""
 // LOCAL DATA FIELDS
 
 // Input
-let input = "INPUT CODE HERE"
+let input = "ENTER CODE HERE"
 
 // Options
 options.push({optAutoFill: true})
@@ -102,7 +102,7 @@ for (let i = 0; i < c_input.length; i++) {
             // ESCAPE
             i++
             elemStr += c_input[i]
-            
+
             console.log(c_input[i] + "     --escape character")
             console.log("__________________") // formatting
         } else {
@@ -179,43 +179,43 @@ for (let i = 0; i < c_input.length; i++) {
                         console.log("__________________") // formatting
                     }
 
-                // manages open tags list
-                if (symbID == 0) {
-                    console.log("open tags")
-                    console.log(tagsOpenList[id])
-                    console.log(elemStr + "   --added, became")
+                    // manages open tags list
+                    if (symbID == 0) {
+                        console.log("open tags")
+                        console.log(tagsOpenList[id])
+                        console.log(elemStr + "   --added, became")
 
-                    tagsOpenList[id].push(elemStr)
+                        tagsOpenList[id].push(elemStr)
 
-                    console.log(tagsOpenList[id])
-                }
-                
-                if (symbID == 1) {
-                    let tagFound = false
-                    let tagDelete = tagsOpenList[id].length - 1
-                    while (!tagFound) {
-                        if (tagsOpenList[id][tagDelete] == elemStr) {
-                            tagFound = true
-                        } else {
-                            tagDelete--
-                            tagFound = (tagDelete < 0) ? "none" : tagFound
-                        }
+                        console.log(tagsOpenList[id])
                     }
-                    console.log("open tags")
-                    console.log(tagsOpenList[id])
-                    console.log(tagsOpenList[id][tagDelete] + "   --removed, became")
+                    
+                    if (symbID == 1) {
+                        let tagFound = false
+                        let tagDelete = tagsOpenList[id].length - 1
+                        while (!tagFound) {
+                            if (tagsOpenList[id][tagDelete] == elemStr) {
+                                tagFound = true
+                            } else {
+                                tagDelete--
+                                tagFound = (tagDelete < 0) ? "none" : tagFound
+                            }
+                        }
+                        console.log("open tags")
+                        console.log(tagsOpenList[id])
+                        console.log(tagsOpenList[id][tagDelete] + "   --removed, became")
 
-                    if (tagFound) {tagsOpenList[id].splice(tagDelete, 1)}
+                        if (tagFound) {tagsOpenList[id].splice(tagDelete, 1)}
 
-                    console.log(tagsOpenList[id])
-                } else {
-                    console.log(elemStr + "    --string data")
+                        console.log(tagsOpenList[id])
+                    } else {
+                        console.log(elemStr + "    --string data")
+                    }
                 }
-            }
-            c_output += elemStr
-            elemStr = ""
             }
         }
+        c_output += elemStr
+        elemStr = ""
     }
 }
 
@@ -303,7 +303,7 @@ function parse(id, input) {
             console.log(grpLen + "         --length")
 
             input = input.slice(0, i - (grpLen + 3)) + input.slice(i + 1)
-            if (escType == 2) {grpStr = escapeShortHTML(escapeHtmlEntities(grpStr))} else if (escType == 1) {grpStr = compile(grpStr, str_name + "_group" + id)}
+            if (escType == 2) {grpStr = escapeShortHTML(escapeHtmlEntities(grpStr))} else if (escType == 1) {grpStr = compile(grpStr, str_name + "_group" + id)} else if (escType == 0) {grpStr = escapeShortHTML(grpStr)}
             input = input.slice(0, i) + grpStr + input.slice(i + 1)
         }
         // group END
@@ -599,7 +599,7 @@ function escapeShortHTML(inputEsc) {
 
     let outputEsc = ""
     for (let i = 0; i < inputEsc.length; i++) {
-        if (symb.includes(inputEsc[i])) {outputEsc += "|"}
+        if (symb.includes(inputEsc[i]) || grpSymb.includes(inputEsc[i]) || inputEsc[i] == "|") {outputEsc += "|"}
         outputEsc += inputEsc[i]
     }
 
