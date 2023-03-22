@@ -25,6 +25,24 @@ let escType = ""
 let elemStr = ""
 let grpStr = ""
 
+//_________________________
+
+// LOCAL DATA FIELDS
+
+// Input
+let input = "INPUT CODE HERE"
+
+// Options
+options.push({optAutoFill: true})
+
+// Priority Tags
+tagsPri.push()
+
+// Output
+document.getElementById('display').innerHTML = compile(input, "main")
+
+//_________________________
+
 // Compile
 function compile(c_input, str_name) {
 
@@ -83,10 +101,9 @@ for (let i = 0; i < c_input.length; i++) {
         if (c_input[i] == "|") {
             // ESCAPE
             i++
-            grpStr = c_input[i]
+            elemStr += c_input[i]
             
-            console.log(grpStr + "     --escape character")
-            console.log("==================") // formatting
+            console.log(c_input[i] + "     --escape character")
             console.log("__________________") // formatting
         } else {
             elemStr += c_input[i]
@@ -171,7 +188,7 @@ for (let i = 0; i < c_input.length; i++) {
                     tagsOpenList[id].push(elemStr)
 
                     console.log(tagsOpenList[id])
-                } 
+                }
                 
                 if (symbID == 1) {
                     let tagFound = false
@@ -194,9 +211,9 @@ for (let i = 0; i < c_input.length; i++) {
                 } else {
                     console.log(elemStr + "    --string data")
                 }
-                }
-                c_output += elemStr
-                elemStr = ""
+            }
+            c_output += elemStr
+            elemStr = ""
             }
         }
     }
@@ -265,7 +282,6 @@ function parse(id, input) {
     for (let i = 0; i < input.length; i++) {
         let cmdType= input[i]
         if (grpSymb.includes(input[i])) {
-            i++
             let grpChr = ""
 
             // GROUP
@@ -287,7 +303,7 @@ function parse(id, input) {
             console.log(grpLen + "         --length")
 
             input = input.slice(0, i - (grpLen + 3)) + input.slice(i + 1)
-            if (escType == 2) {grpStr = escapeHtmlEntities(grpStr)} else if (escType == 1) {grpStr = compile(grpStr, str_name + "_group" + id)}
+            if (escType == 2) {grpStr = escapeShortHTML(escapeHtmlEntities(grpStr))} else if (escType == 1) {grpStr = compile(grpStr, str_name + "_group" + id)}
             input = input.slice(0, i) + grpStr + input.slice(i + 1)
         }
         // group END
@@ -543,7 +559,6 @@ function parse(id, input) {
             input = input.slice(0, i) + resultStr + input.slice(i)
         }
         //if-else statement END
-        
     }
     if (varFound) {input = parse(id, input)}
     return input
@@ -576,6 +591,21 @@ function varFind(list_id, grpChr, loc) {
         console.log(varList[list_id][chrID].data + "        --data")
     } else {chrID = "F"}
     return chrID
+}
+
+function escapeShortHTML(inputEsc) {
+    console.log("__________________") // formatting
+    console.log(inputEsc + "    ---sHTML escape ipnut")
+
+    let outputEsc = ""
+    for (let i = 0; i < inputEsc.length; i++) {
+        if (symb.includes(inputEsc[i])) {outputEsc += "|"}
+        outputEsc += inputEsc[i]
+    }
+
+    console.log(outputEsc + "    ---sHTML escape output")
+    console.log("__________________") // formatting
+    return outputEsc
 }
 
 
