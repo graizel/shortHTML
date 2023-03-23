@@ -30,7 +30,7 @@ let grpStr = ""
 // LOCAL DATA FIELDS
 
 // Input
-let input = "ENTER CODE HERE"
+let input = "INPUT CODE HERE"
 
 // Options
 options.push({optAutoFill: true})
@@ -275,26 +275,26 @@ function translateSymb(list_id, mod_pre, mod_crt, symb_num) {
     }
 }
 
-function parse(id, input) {
+function parse(id, p_input) {
     let varFound = false
     
     // GROUP - VARIABLE - FUNCTION COMPILER
-    for (let i = 0; i < input.length; i++) {
-        let cmdType= input[i]
-        if (grpSymb.includes(input[i])) {
+    for (let i = 0; i < p_input.length; i++) {
+        let cmdType= p_input[i]
+        if (grpSymb.includes(p_input[i])) {
             let grpChr = ""
 
             // GROUP
-            for (let j = 0; grpSymb[j] != input[i]; j++) {escType = j + 1}
+            for (let j = 0; grpSymb[j] != p_input[i]; j++) {escType = j + 1}
             console.log("******************") // formatting
             console.log("group at " + i)
-            console.log(input[i] + " / " + escType + " / " + input[i + 1] + "          --group type / ID / char")
+            console.log(p_input[i] + " / " + escType + " / " + p_input[i + 1] + "          --group type / ID / char")
 
-            grpChr = input[i + 1]
+            grpChr = p_input[i + 1]
             i += 2
             let grpLen = 0
-            while (input[i] != grpChr) {
-                grpStr += input[i]
+            while (p_input[i] != grpChr) {
+                grpStr += p_input[i]
                 grpLen++
                 i++
             }
@@ -302,32 +302,32 @@ function parse(id, input) {
             console.log(grpStr + "     --data")
             console.log(grpLen + "         --length")
 
-            input = input.slice(0, i - (grpLen + 3)) + input.slice(i + 1)
-            if (escType == 2) {grpStr = escapeShortHTML(escapeHtmlEntities(grpStr))} else if (escType == 1) {grpStr = compile(grpStr, str_name + "_group" + id)} else if (escType == 0) {grpStr = escapeShortHTML(grpStr)}
-            input = input.slice(0, i) + grpStr + input.slice(i + 1)
+            p_input = p_input.slice(0, i - (grpLen + 3)) + p_input.slice(i + 1)
+            if (escType == 2) {grpStr = escapeShortHTML(escapeHtmlEntities(grpStr))} else if (escType == 1) {grpStr = compile(grpStr, "group_" + id)} else if (escType == 0) {grpStr = escapeShortHTML(grpStr)}
+            p_input = p_input.slice(0, i) + grpStr + p_input.slice(i + 1)
         }
         // group END
             
         // VARIABLE
-        if (input[i - 1] === "|" && (input[i] === "v" || input[i] === "d")) {
+        if (p_input[i - 1] === "|" && (p_input[i] === "v" || p_input[i] === "d")) {
             varFound = true
-            let grpChr = input[i + 1]
+            let grpChr = p_input[i + 1]
 
             console.log("******************") // formatting
             console.log("variable at " + (i - 1))
             // if loading variable
-            if (varList[id].some(e => e.chr === grpChr) && input[i] === "v") {
+            if (varList[id].some(e => e.chr === grpChr) && p_input[i] === "v") {
                 i++
-                // inserts variable directly into input so it can be read by compliler
+                // inserts variable directly into p_input so it can be read by compliler
                 let varData = varList[id][varFind(id, grpChr, i)].data
-                input = input.slice(0, i - 2) + varData + input.slice(i + 1)
+                p_input = p_input.slice(0, i - 2) + varData + p_input.slice(i + 1)
             } else {
                 // creates variable
                 i += 2
                 grpStr = ""
                 let grpLen = 0
-                while (input[i] != grpChr) {
-                    grpStr += input[i]
+                while (p_input[i] != grpChr) {
+                    grpStr += p_input[i]
                     grpLen++
                     i++
                 }
@@ -341,7 +341,7 @@ function parse(id, input) {
                 } else {
                     varSave(id, grpStr, grpChr, i)
                 }
-                input = input.slice(0, i - (grpLen + 3)) + input.slice(i + 1)
+                p_input = p_input.slice(0, i - (grpLen + 3)) + p_input.slice(i + 1)
                 i -= (grpLen + 3)
                 console.log(grpLen + "         --length")
             }
@@ -350,26 +350,27 @@ function parse(id, input) {
 
         // READ
         // find read range
-        if (input[i - 1] === "|" && input[i] === "r") {
-            let method = input[i + 1]
-            let grpChr = input[i + 2]
+        if (p_input[i - 1] === "|" && p_input[i] === "r") {
+            let range = p_input[i + 1]
+            let method = p_input[i + 2]
+            let grpChr = p_input[i + 3]
 
             console.log(method + "     --find index method")
             console.log(grpChr + "     --group character")
 
-            i += 3
+            i += 4
             grpStr = ""
             let grpLen = 0
             let numStart = ""
             let numEnd = ""
-            while (input[i] != grpChr) {
-                if (input[i] == ",") {
+            while (p_input[i] != grpChr) {
+                if (p_input[i] == ",") {
                     numStart = grpStr
                     grpStr = ""
                     grpLen++
                     i++
                 }
-                grpStr += input[i]
+                grpStr += p_input[i]
                 grpLen++
                 i++
             }
@@ -378,8 +379,9 @@ function parse(id, input) {
 
             console.log(numStart + " / " + numEnd + "     --find index range")
 
-            input = input.slice(0, i - (grpLen + 4)) + input.slice(i)
-            i-= (grpLen + 4)
+            input = input.slice(0, i - (grpLen + 5)) + input.slice(i)
+            p_input = p_input.slice(0, i - (grpLen + 5)) + p_input.slice(i)
+            i-= (grpLen + 5)
             grpStr = ""
 
             // parse vars in read string
@@ -389,23 +391,27 @@ function parse(id, input) {
             // add read string to current string
             for (let j = numStart; j <= numEnd; j++) {
                 j *= 1
-                grpStr += input[((i + 1) * (method === "r")) + j]
+                if (range == "m") {
+                    grpStr += input[((i + 1) * (method === "r")) + j]
+                } else {
+                    grpStr += p_input[((i + 1) * (method === "r")) + j]
+                }
             }
-            if (method === "a" && numStart === -1 && numEnd === -1) {grpStr = input}
+            if (method === "a" && numStart === -1 && numEnd === -1) {grpStr = p_input.slice(0, i) + p_input.slice(i + 1, p_input.length)}
             if (method === "r" && numStart === -1 && numEnd === -1) {grpStr = i + 1}
-            input = input.slice(0, i) + grpStr + input.slice(i + 1)
+            p_input = p_input.slice(0, i) + grpStr + p_input.slice(i + 1)
             
-            console.log(numStart)
-            console.log(numEnd)
+            console.log(numStart + "    --read start")
+            console.log(numEnd + "    --read end")
             console.log(grpStr + "    --read string")
         }
         // read END
 
         // GOTO
-        if (input[i - 1] === "|" && input[i] === "g") {
+        if (p_input[i - 1] === "|" && p_input[i] === "g") {
             console.log("goto at " + (i - 1)) // formatting
-            let method = input[i + 1]
-            let grpChr = input[i + 2]
+            let method = p_input[i + 1]
+            let grpChr = p_input[i + 2]
 
             console.log(method + "     --find index method")
             console.log(grpChr + "     --group character")
@@ -413,22 +419,22 @@ function parse(id, input) {
             i += 3
             grpStr = ""
             let grpLen = 0
-            while (input[i] != grpChr) {
-                grpStr += input[i]
+            while (p_input[i] != grpChr) {
+                grpStr += p_input[i]
                 grpLen++
                 i++
             }
 
             console.log(grpStr + "     --goto offset")
 
-            input = input.slice(0, i - (grpLen + 4)) + input.slice(i + 1)
+            p_input = p_input.slice(0, i - (grpLen + 4)) + p_input.slice(i + 1)
             i-= (grpLen + 4)
 
             // parse goto string
             grpStr = parse(id, grpStr)
 
             // goto position found
-            input = input.slice(0, i) + input.slice((i * (method === "r")) + (grpStr * 1), input.length)
+            p_input = p_input.slice(0, i) + p_input.slice((i * (method === "r")) + (grpStr * 1), p_input.length)
 
             console.log(i * (method === "r") + (grpStr * 1) + "      --goto index")
             console.log("__________________") // formatting
@@ -436,7 +442,7 @@ function parse(id, input) {
         // goto END
 
         // MATH
-        if (input[i - 1] === "|" && input[i] === "m") {
+        if (p_input[i - 1] === "|" && p_input[i] === "m") {
             let grpChr = "}"
 
             console.log(grpChr + "     --group character")
@@ -447,17 +453,17 @@ function parse(id, input) {
             let numA = ""
             let numB = ""
             let numOp = ""
-            while (input[i] != grpChr) {
-                if (mathOp.includes(input[i])) {
+            while (p_input[i] != grpChr) {
+                if (mathOp.includes(p_input[i])) {
                     numA = grpStr
                     grpStr = ""
                     do {
-                    numOp += input[i]
+                    numOp += p_input[i]
                     grpLen++
                     i++
-                    } while (mathOp.includes(input[i]))
+                    } while (mathOp.includes(p_input[i]))
                 }
-                grpStr += input[i]
+                grpStr += p_input[i]
                 grpLen++
                 i++
             }
@@ -465,7 +471,7 @@ function parse(id, input) {
 
             console.log(numA + " " + numOp + " " + numB + "     --math operation")
 
-            input = input.slice(0, i - (grpLen + 2)) + input.slice(i + 1)
+            p_input = p_input.slice(0, i - (grpLen + 2)) + p_input.slice(i + 1)
             i-= (grpLen + 2)
             grpStr = ""
 
@@ -475,15 +481,15 @@ function parse(id, input) {
             let numCalc = eval(numA + numOp + numB)
 
             // add read string to current string
-            input = input.slice(0, i) + numCalc + input.slice(i)
+            p_input = p_input.slice(0, i) + numCalc + p_input.slice(i)
             console.log((numCalc) + "     --result")
         }
         // math END
 
         // IF STATEMENT
-        if (input[i - 1] === "|" && input[i] === "i") {
+        if (p_input[i - 1] === "|" && p_input[i] === "i") {
             console.log("if statement at " + (i - 1)) // formatting
-            let grpChr = input[i + 1]
+            let grpChr = p_input[i + 1]
 
             console.log(grpChr + "     --group character")
 
@@ -494,18 +500,18 @@ function parse(id, input) {
             let numA = ""
             let numB = ""
             let numOp = ""
-            while (input[i] != grpChr) {
-                if (queryOp.includes(input[i])) {
+            while (p_input[i] != grpChr) {
+                if (queryOp.includes(p_input[i])) {
                     numA = grpStr
                     grpStr = ""
-                    while (queryOp.includes(input[i])) {
-                        numOp += input[i]
-                        if (input[i] === "=") {numOp += "="; console.log(numOp)}
+                    while (queryOp.includes(p_input[i])) {
+                        numOp += p_input[i]
+                        if (p_input[i] === "=") {numOp += "="; console.log(numOp)}
                         grpLen++
                         i++
                     }
                 }
-                grpStr += input[i]
+                grpStr += p_input[i]
                 grpLen++
                 i++
             }
@@ -516,33 +522,33 @@ function parse(id, input) {
             numB = (parse(id, numB) * 1)
             let queryStr = eval(numA + numOp + numB)
 
-            input = input.slice(0, i - (grpLen + 2)) + input.slice(i + 1)
+            p_input = p_input.slice(0, i - (grpLen + 2)) + p_input.slice(i + 1)
             console.log(queryStr + "     --query string")
             i -= grpLen + 2
 
             // get if string
             grpStr = ""
             grpLen = 0
-            while (input[i] != grpChr) {    
-                grpStr += input[i]
+            while (p_input[i] != grpChr) {    
+                grpStr += p_input[i]
                 grpLen++
                 i++
             }
             let ifStr = grpStr
             console.log(ifStr + "     --if string")
-            input = input.slice(0, i - (grpLen + 1)) + input.slice(i + 1)
+            p_input = p_input.slice(0, i - (grpLen + 1)) + p_input.slice(i + 1)
             i -= grpLen + 1
-            console.log(input)
+            console.log(p_input)
 
             // get else str
             let elStr = ""
-            if (input[i] === "e") {
+            if (p_input[i] === "e") {
                 console.log(grpChr)
                 i++
                 grpStr = ""
                 let grpLen = 0
-                while (input[i] != grpChr) {
-                    grpStr += input[i]
+                while (p_input[i] != grpChr) {
+                    grpStr += p_input[i]
                     grpLen++
                     i++
                 }
@@ -550,18 +556,18 @@ function parse(id, input) {
                 elStr = grpStr
                 console.log(elStr + "     --else string")
                 console.log(elStr.length + "     --else length")
-                console.log(input)
-                input = input.slice(0, i - (grpLen - 1)) + input.slice(i + 3)
-                console.log(input)
+                console.log(p_input)
+                p_input = p_input.slice(0, i - (grpLen - 1)) + p_input.slice(i + 3)
+                console.log(p_input)
             }
             i -= 2
             let resultStr = (eval(queryStr)) ? ifStr : elStr
-            input = input.slice(0, i) + resultStr + input.slice(i)
+            p_input = p_input.slice(0, i) + resultStr + p_input.slice(i)
         }
         //if-else statement END
     }
-    if (varFound) {input = parse(id, input)}
-    return input
+    if (varFound) {p_input = parse(id, p_input)}
+    return p_input
 }
 
 function varSave(list_id, grpStr, grpChr, loc) {
@@ -607,6 +613,51 @@ function escapeShortHTML(inputEsc) {
     console.log("__________________") // formatting
     return outputEsc
 }
+
+
+
+// MASTER KEY
+//
+// Symbols:
+//   <   --   open          <p          =          <p>
+//   >   --   close         >p          =          </p>
+//   <   --   self close    ^br         =          <br/>
+//   ?   --   attribute     <p?style    =          <p style>
+//   ~   --   string        ~text       =          text
+//
+// Shortcuts:
+//   >_  --   close last    <p>_        =          <p></p>                (closes most recently opened tag)
+//   >>  --   close all     <p<i>>      =          <p><i></i></p>         (closes all open tags)
+//
+// Groups:
+//   |   --   escape        |^br        =          ^br
+//   |(  --   plaintext     |(#^br#     =          ^br          format:   |(XYX   , X = limiting character, Y = data (displays as plaintext on page)
+//   |{  --   sHTML compile |{#^br#     =          <br/>        format:   |[XYX   , X = limiting character, Y = data (compiled as sHTML, read as HTML by page)
+//   |[  --   HTML compile  |(#<br/>#   =          <br/>        format:   |(XYX   , X = limiting character, Y = data (compiled and read as HTML by page)
+//   |v  --   variable:         (declares and calls variables dynamically)
+//              declare     |v#^br#   stored as    ^br          format:   |vXYX   , X = limiting character, Y = data (saved as variable named X, data is stored, can be called)
+//              call        |v#         =          ^br          format:   |vX     , X = identity character, Y = data (calls variable named X, must already be declared)
+//   |d  --   declare       |d#^br#   stored as    ^br          format:   |fXYX   , X = identity character, Y = data (saved as variable named X, can overwrite variable data)
+//
+// Functions
+//   |r  --   read          |rma#14#               =         ^        (outputs 14th character of main input string)
+//      or                  |rma#14,16#            =         ^br      (outputs 14th through 16th character of main input string)
+//      or                  |rmr#14#               =         r        (outputs 14th character from current index of main input string)
+//      or                  |rca#2#                =         b        (outputs 2nd character from current index of current input string)
+//          format: |rABXYX            , X = limiting character , Y = read index, A = string selector , B = find index method   , (a0 returns current level input string, r0 returns current index)
+//
+//   |g  --   goto          |ga#14#               sets character index to 14th of input string
+//      or                  |gr#14#               sets character index to current character + 14
+//          format: |gZXYX            , X = limiting character  , Y = data      , Z = find index method 
+//
+//   |m  --   math          |m1+2}                 =           3
+//          format: |mXZY}            , X/Y = data              , Z = operator
+//
+//   |i  --   if            |i#|v$=1#^br#          =         <br/> (if |v$ is equal to 1)
+//          format: |iXAZBXYX         , X = limiting character  , Y = data      , Z = equality type   , A/B = values
+//
+//   e  --   else           |i#|v$=1#^br#e<p#      =         <br/>   (if |v$ is equal to 1),   <p>   (if |v$ is not equal to 1)
+//          format: |iXAZBXYXeYX      , X = limiting character  , Y = data      , Z = equality type   , A/B = values
 
 
 
