@@ -8,7 +8,7 @@ var grpSymb = ["[", "{", "("]
 var mathOp = ["+", "-", "*", "/", "%", "^"]
 var queryOp = ["=", "<", ">"]
 
-let options = [{optAutoFill: ""}]
+let options = []
 let tagsPri = []
 
 let idTotal = 0
@@ -30,7 +30,7 @@ let grpStr = ""
 // LOCAL DATA FIELDS
 
 // Input
-let input = "INPUT CODE HERE"
+let input = "2|m4*(|rma!1!+3)}"
 
 // Options
 options.push({optAutoFill: true})
@@ -76,10 +76,10 @@ for (let i = 0; i < c_input.length; i++) {
         while (tagsOpenList[id].length > 0) {
             tagCloseStr += ">-" + tagsOpenList[id].pop()
         }
-        c_input = c_input.slice(0, i) + tagCloseStr + c_input.slice(i + 2)
+        c_input = c_input.slice(0, i) + tagCloseStr + "~" + c_input.slice(i + 2)
     } else if (c_input[i] == ">" && c_input[i + 1] == "_") {
         // close previous
-        c_input = c_input.slice(0, i) + ">-" + tagsOpenList[id].pop() + c_input.slice(i + 2)
+        c_input = c_input.slice(0, i) + ">-" + tagsOpenList[id].pop() + "~" + c_input.slice(i + 2)
     } 
     if (symb.includes(c_input[i])) {
         // SYMBOL TRANSLATOR
@@ -108,6 +108,9 @@ for (let i = 0; i < c_input.length; i++) {
         } else {
             elemStr += c_input[i]
             if (symb.includes(c_input[i + 1]) || i == c_input.length - 1) {
+
+                console.log(c_input[i + 1])
+
                 // === AUTO-FILL ===
                 if (elemStr[0] == "-") {
                     elemStr = elemStr.slice(1, elemStr.length)
@@ -168,7 +171,7 @@ for (let i = 0; i < c_input.length; i++) {
 
                         elemStr = (fillType == 3) ? elemStr = tagsAll[tagID] : (fillType == 2) ? elemStr = tagsPri[tagID] : (fillType == 1) ? elemStr = tagsOpenList[id][tagID] : elemStr     // autofills if match was found
 
-                        if (fillType > 0) {console.log(elemStr + "    --auto-filled tag")}
+                        if (fillType > 0) {console.log(elemStr + "    --auto filled tag")}
                         if (fillType > 0) {console.log(fillType + "     --fill type")}
                         console.log(symb[symbID] + "         --symbol type")
                         if (symbID < 3) {console.log(tagID + "       --tag ID")}
@@ -209,13 +212,17 @@ for (let i = 0; i < c_input.length; i++) {
 
                         console.log(tagsOpenList[id])
                     } else {
+                        console.log("string at " + (i - elemStr.length))
                         console.log(elemStr + "    --string data")
+                        console.log(symb[symbID] + "         --symbol type")
+                        console.log("__________________") // formatting
                     }
                 }
+                c_output += elemStr
+                console.log(elemStr + "   element string reset")
+                elemStr = ""
             }
         }
-        c_output += elemStr
-        elemStr = ""
     }
 }
 
@@ -281,7 +288,7 @@ function parse(id, p_input) {
     // GROUP - VARIABLE - FUNCTION COMPILER
     for (let i = 0; i < p_input.length; i++) {
         let cmdType= p_input[i]
-        if (grpSymb.includes(p_input[i])) {
+        if (p_input[i - 1] === "|" && grpSymb.includes(p_input[i])) {
             let grpChr = ""
 
             // GROUP
@@ -454,31 +461,19 @@ function parse(id, p_input) {
             let numB = ""
             let numOp = ""
             while (p_input[i] != grpChr) {
-                if (mathOp.includes(p_input[i])) {
-                    numA = grpStr
-                    grpStr = ""
-                    do {
-                    numOp += p_input[i]
-                    grpLen++
-                    i++
-                    } while (mathOp.includes(p_input[i]))
-                }
                 grpStr += p_input[i]
                 grpLen++
                 i++
             }
             numB = grpStr
 
-            console.log(numA + " " + numOp + " " + numB + "     --math operation")
+            console.log(grpStr + "     --math operation")
 
             p_input = p_input.slice(0, i - (grpLen + 2)) + p_input.slice(i + 1)
             i-= (grpLen + 2)
-            grpStr = ""
 
             // parse read string
-            numA = (parse(id, numA) * 1)
-            numB = (parse(id, numB) * 1)
-            let numCalc = eval(numA + numOp + numB)
+            let numCalc = eval(parse(id, grpStr))
 
             // add read string to current string
             p_input = p_input.slice(0, i) + numCalc + p_input.slice(i)
@@ -599,14 +594,14 @@ function varFind(list_id, grpChr, loc) {
     return chrID
 }
 
-function escapeShortHTML(inputEsc) {
+function escapeShortHTML(esc_input) {
     console.log("__________________") // formatting
-    console.log(inputEsc + "    ---sHTML escape ipnut")
+    console.log(esc_input + "    ---sHTML escape ipnut")
 
     let outputEsc = ""
-    for (let i = 0; i < inputEsc.length; i++) {
-        if (symb.includes(inputEsc[i]) || grpSymb.includes(inputEsc[i]) || inputEsc[i] == "|") {outputEsc += "|"}
-        outputEsc += inputEsc[i]
+    for (let i = 0; i < esc_input.length; i++) {
+        if (symb.includes(esc_input[i]) || esc_input[i] == "|") {outputEsc += "|"}
+        outputEsc += esc_input[i]
     }
 
     console.log(outputEsc + "    ---sHTML escape output")
