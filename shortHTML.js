@@ -640,11 +640,11 @@ function escapeShortHTML(inputEsc) {
 //   |d  --   declare       |d#^br#   stored as    ^br          format:   |fXYX   , X = identity character, Y = data (saved as variable named X, can overwrite variable data)
 //
 // Functions
-//   |r  --   read          |rma#14#               =         ^        (outputs 14th character of main input string)
-//      or                  |rma#14,16#            =         ^br      (outputs 14th through 16th character of main input string)
-//      or                  |rmr#14#               =         r        (outputs 14th character from current index of main input string)
-//      or                  |rca#2#                =         b        (outputs 2nd character from current index of current input string)
-//          format: |rABXYX            , X = limiting character , Y = read index, A = string selector , B = find index method   , (a0 returns current level input string, r0 returns current index)
+//   |r  --   read          |rma#14#               =         ^        (outputs 14th character of input string)
+//      or                  |rma#14,16#            =         ^br      (outputs 14th through 16th character of input string)
+//      or                  |rmr#14#               =         r        (outputs 14th character from current index of input string)
+//      or                  |rca#2#                =         b        (outputs 2nd character of current string)
+//          format: |rABXYX            , X = limiting character , Y = read index, A = string selector , B = find index method   , (a0 returns current string, r0 returns current index)
 //
 //   |g  --   goto          |ga#14#               sets character index to 14th of input string
 //      or                  |gr#14#               sets character index to current character + 14
