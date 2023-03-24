@@ -30,7 +30,7 @@ let grpStr = ""
 // LOCAL DATA FIELDS
 
 // Input
-let input = "2|m4*(|rma!1!+3)}"
+let input = "INPUT CODE HERE"
 
 // Options
 options.push({optAutoFill: true})
